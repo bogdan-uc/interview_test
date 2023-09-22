@@ -4,8 +4,8 @@ import os
 import shutil
 import datetime
 import time
-
-def listdirs(rootdir):          #this function is used to extract all paths of the subdirectories
+#this function is used to extract all paths of the subdirectories
+def listdirs(rootdir):          
     list_of_directories = []
     for file in os.listdir(rootdir):
         d = rootdir + "\\" + file
@@ -13,8 +13,9 @@ def listdirs(rootdir):          #this function is used to extract all paths of t
             list_of_directories.append(d)
             list_of_directories.extend(listdirs(d))
     return list_of_directories
-
-def check_deleted(dir_backup, dir_src, back,log_path): #check which files or folders are in the backup directory and are not in the main directory, and delete them
+    
+#check which files or folders are in the backup directory and are not in the main directory, and delete them
+def check_deleted(dir_backup, dir_src, back,log_path): 
     for i in range(len(dir_backup)):
         if not dir_backup[i] in dir_src:
             path = back+ "\\" + dir_backup[i]
@@ -37,12 +38,11 @@ def check_deleted(dir_backup, dir_src, back,log_path): #check which files or fol
                 f.close()
                 print(msj)
 
+#check which files or folders are in the main directory and are not in the backup directory and add them to the backup
 def check_content(dir_backup,dir_src,source,back,log_path ):
     backup_directories = []
     for i in range(len(dir_src)):
-        #print(dir_src[i])
-        #print(dir_backup)
-        if dir_src[i] not in dir_backup:          #check which files or folders are in the main directory and are not in the backup directory and add them to the backup
+        if dir_src[i] not in dir_backup:          
             full_src = source + "\\" + dir_src[i]
             path = back + "\\" + dir_src[i]
             if os.path.isfile(full_src):
@@ -66,7 +66,8 @@ def check_content(dir_backup,dir_src,source,back,log_path ):
                 f.close()
                 print(msj)
         else:
-                full_src = source + "\\" + dir_src[i]   #if the file is present in both directories, it will check the source variant and backup variant, and if they are different, will copy from source to backup
+            #if the file is present in both directories, it will check the source variant and backup variant, and if they are different, will copy from source to backup
+                full_src = source + "\\" + dir_src[i]   
                 if not full_src in backup_directories:
                     path = back + "\\" + dir_src[i]
                     if os.path.isfile(full_src):
@@ -89,20 +90,22 @@ while True:
     timer = float(sys.argv[3])
     file_log_path = sys.argv[4]
     backup_files = os.listdir(backup)
-
-    if len(backup_files) == 0: #check if backup file is empty, and if it is, copy entire source folder
+#check if backup file is empty, and if it is, copy entire source folder
+    if len(backup_files) == 0: 
 
         shutil.copytree(src, backup, dirs_exist_ok=True)
 
     else:
-
+        
         all_paths = listdirs(src)
-        all_paths.insert(0, src) #add maine path to the list of subdirectories
-        #print(all_paths)
+        #add maine path to the list of subdirectories
+        all_paths.insert(0, src) 
+        
 
         for i in range(len(all_paths)):
             src_path = all_paths[i]
-            dir_list_src = [file for file in os.listdir(src_path) if not file.startswith('.')] #extract name of files without hidden files
+            #extract name of files without hidden files
+            dir_list_src = [file for file in os.listdir(src_path) if not file.startswith('.')] 
             var = src_path.replace(src, "")
             new_backup = backup+var
             dir_list_backup = [file for file in os.listdir(new_backup) if not file.startswith('.')]
